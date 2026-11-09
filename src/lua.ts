@@ -1,3 +1,5 @@
+import * as os from 'os';
+
 const luaFunctions = [
     'luaL_newstate',
     'luaL_openlibs',
@@ -12,9 +14,10 @@ export class Lua {
     private state: number | null;
 
     constructor() {
-        this.lib = native.dlopen('lua.dll') ?? 0;
+        const path = os.platform === 'darwin' ? `liblua.5.4.dylib` : `lua54.dll`;
+        this.lib = native.dlopen(path) ?? 0;
         if (0 === this.lib) {
-            throw new Error('Could not load library');
+            throw new Error(`Could not load library ${path}`);
         }
         luaFunctions.forEach((f) => {
             const h = native.dlsym(this.lib, f);

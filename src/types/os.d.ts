@@ -1,5 +1,7 @@
 declare module 'os' {
     export const platform: string;
+    export function getcwd(): [string, string];
+    export function realpath(path: string): [string, string];
     export function exec(args: string[], options?: {
         stdout?: number,
         stderr?: number
