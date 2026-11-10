@@ -1,6 +1,5 @@
 import { Lua } from './lua';
 
 const lua = new Lua();
-lua.eval(`print('Hello from Lua')`);
+lua.eval(`print('Lua is working !')`);
 lua.destroy();
-console.log('Hello from QuickJS');

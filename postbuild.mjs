@@ -45,5 +45,3 @@ Object.keys(libraries).forEach(async (lib) => {
 });
 
 copyFileSync('quickjs-native/start.command', 'start.command');
-copyFileSync('quickjs-native/release/index', 'release/lua');
-copyFileSync('quickjs-native/release/index.exe', 'release/lua.exe');

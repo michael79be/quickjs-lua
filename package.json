@@ -2,7 +2,7 @@
     "scripts": {
         "build": "rollup --config rollup.config.ts --configPlugin typescript",
         "postbuild": "node postbuild.mjs",
-        "start": "./start.command"
+        "start": "cp -Rvp quickjs-native/release/ release/ >/dev/null && ./start.command"
     },
     "devDependencies": {
         "@andrewbranch/untar.js": "^1.0.4",
