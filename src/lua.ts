@@ -26,20 +26,31 @@ export class Lua {
 
     constructor() {
         const path = os.platform === 'darwin' ? `liblua.5.4.dylib` : `lua54.dll`;
-        this.lib = native.dlopen(path) ?? 0;
+        const sp = os.platform === 'darwin' ? '/' : '\\';
+        const parts = os.realpath(scriptArgs[0])[0].split(sp);
+        parts.pop();
+        let cwd = parts.join('/');
+        if (-1 !== cwd.indexOf('.app')) {
+            parts.pop();
+            parts.pop();
+            parts.pop();
+            cwd = parts.join('/');
+        }
+
+        this.lib = native.dlopen(`${cwd}/${path}`) ?? 0;
         if (0 === this.lib) {
-            throw new Error(`Could not load library ${path}`);
+            throw new Error(`[Lua] Could not load library ${cwd}/${path}`);
         }
         luaFunctions.forEach((f) => {
             const h = native.dlsym(this.lib, f);
             if (null === h) {
-                throw new Error(`Invalid library (function ${f} not found)`);
+                throw new Error(`[Lua] Invalid library (function ${f} not found)`);
             }
             this.func[f] = h;
         });
         this.state = native.invoke(this.func['luaL_newstate'], []);
         if (null === this.state) {
-            new Error('Could not created state');
+            new Error('[Lua] Could not created state');
         }
         native.invoke(this.func['luaL_openlibs'], [this.state]);
     }
@@ -47,7 +58,9 @@ export class Lua {
     eval(code: string): string | number | boolean | null {
         const loadstring = native.invoke(this.func['luaL_loadstring'], [this.state, code]);
         if (0 !== loadstring) {
-            throw new Error('Could not load code');
+            const errorMsg = native.invoke(this.func['lua_tolstring'], [this.state, -1, 0], 'string');
+            native.invoke(this.func['lua_settop'], [this.state, 0]);
+            throw new Error(`[Lua] Compilation error: ${errorMsg}`);
         }
         native.invoke(this.func['lua_pcallk'], [this.state, 0, -1, 0, 0, null]);
         const luaType = native.invoke(this.func['lua_type'], [this.state, -1]);

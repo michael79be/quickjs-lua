@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'fs';
 import { execSync } from 'child_process';
 import { inflate } from 'pako';
 import { untar } from '@andrewbranch/untar.js';
@@ -13,12 +13,16 @@ copyFileSync('/opt/homebrew/opt/lua@5.4/lib/liblua.5.4.dylib', 'release/liblua.5
 
 const libraries = {
     'lua54.dll': 'https://sourceforge.net/projects/luabinaries/files/5.4.8/Windows%20Libraries/Dynamic/lua-5.4.8_Win64_dllw6_lib.zip/download',
-    // 'liblua52.dylib': 'https://sourceforge.net/projects/luabinaries/files/5.2.4/Other%20Libraries/lua-5.2.4_MacOS1011_lib.tar.gz/download'
+    'yue.so': 'https://github.com/yue/yue/releases/download/v0.15.6/lua_yue_lua_5.4_v0.15.6_mac_arm64.zip',
+    'yue.dll': 'https://github.com/yue/yue/releases/download/v0.15.6/lua_yue_lua_5.4_v0.15.6_win_x64.zip',
+    'WebView2Loader.dll': 'https://github.com/yue/yue/releases/download/v0.15.6/lua_yue_lua_5.4_v0.15.6_win_x64.zip'
 }
 Object.keys(libraries).forEach(async (lib) => {
     const url = libraries[lib];
     const parts = url.split('/');
-    parts.pop(); // pop /download from URL
+    if (url.endsWith('/download')) {
+        parts.pop(); // pop /download from URL
+    }
     const name = String(parts.pop());
     if (existsSync(`release/${name}`)) {
         return;
@@ -45,3 +49,8 @@ Object.keys(libraries).forEach(async (lib) => {
 });
 
 copyFileSync('quickjs-native/start.command', 'start.command');
+if (!existsSync('release/lib/yue/')) {
+    mkdirSync('release/lib/yue/', { recursive: true });
+}
+copyFileSync('release/yue.dll', 'release/lib/yue/gui.dll');
+copyFileSync('release/yue.so', 'release/lib/yue/gui.so');
