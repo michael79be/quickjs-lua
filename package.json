@@ -10,7 +10,6 @@
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-typescript": "^12.3.1",
         "@types/node": "^26.6.6",
-        "i": "^0.3.7",
         "node-fetch": "^3.3.2",
         "npm": "^11.21.2",
         "pako": "^3.0.3",
