@@ -1,8 +1,10 @@
 # quickjs-lua
 
-Lua 5.4 bindings for QuickJS Native. The Lua shared library is downloaded
-automatically during installation and build; it is not required to be installed
-on the user's system.
+Lua 5.4 bindings for QuickJS Native. The Linux and Windows shared libraries are
+downloaded automatically during installation and build. On macOS, Homebrew
+provides a library for the current architecture when the bundled one is missing
+or incompatible. The libraries are included in the published package, so they
+are not required to be installed on the user's system.
 
 ## Usage
 
@@ -15,18 +17,20 @@ console.log(`2 + 3 = ${result}`);
 lua.destroy();
 ```
 
-On macOS, the installer uses Homebrew to install Lua 5.4 and copies its dylib
-into `release/`. On Windows and Linux, it downloads the matching DLL or SO from
-LuaBinaries. The runtime looks beside the executable and in the installed
-package's `release/` directory. To override this path, pass the library path to
-the constructor:
+The `release/` directory contains the libraries for all supported platforms.
+Linux and Windows libraries are downloaded from LuaBinaries during
+installation/build. On macOS, Homebrew supplies the dylib when it is missing or
+does not match the current architecture.
+The runtime selects the matching library and looks beside the executable and
+in the installed package's `release/` directory. To override this path, pass
+the library path to the constructor:
 
 ```ts
 const lua = new Lua('/path/to/liblua.5.4.dylib');
 ```
 
-Multiple paths may be provided as a semicolon-separated string. Windows and
-Linux downloads currently support x64.
+Multiple paths may be provided as a semicolon-separated string. The bundled
+Windows and Linux binaries currently support x64.
 
 ## Create an executable
 

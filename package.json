@@ -14,6 +14,7 @@
     "files": [
         "dist/index.js",
         "dist/types",
+        "release/",
         "postbuild.mjs"
     ],
     "scripts": {
@@ -21,7 +22,7 @@
         "build": "rollup --config rollup.config.ts --configPlugin typescript && tsc --project tsconfig.json --declaration --emitDeclarationOnly --declarationDir dist/types",
         "postbuild": "node postbuild.mjs",
         "postinstall": "node postbuild.mjs",
-        "prepack": "npm run build"
+        "prepare": "npm run build"
     },
     "engines": {
         "node": ">=18"
