@@ -1,4 +1,4 @@
-import { Lua } from '../lua';
+import { Lua } from '../index';
 
 const lua = new Lua();
 const sum = lua.eval(`return 2 + 3`);
